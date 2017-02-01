@@ -42,9 +42,9 @@ class TemplatesCollection
     {
         $templates = [
             [
-                'name'        => 'add_iblock',
-                'path'        => $this->dir.'/add_iblock.template',
-                'description' => 'Add iblock',
+                'name'        => 'add_iblock_type',
+                'path'        => $this->dir.'/add_iblock_type.template',
+                'description' => 'Add iblock type',
             ],
             [
                 'name'        => 'add_iblock',
