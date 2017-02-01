@@ -19,8 +19,8 @@ class __className__ extends BitrixMigration
             'SECTIONS'=>'Y',
             'IN_RSS'=>'N',
             'SORT'=>100,
-            'LANG'=>Array(
-                'ru'=>Array(
+            'LANG'=>array(
+                'ru'=>array(
                     'NAME'=>'__',
                 )
             )
@@ -42,11 +42,12 @@ class __className__ extends BitrixMigration
 
         global $DB;
         $DB->StartTransaction();
-        if(!CIBlockType::Delete('__'))
-        {
+
+        if (!CIBlockType::Delete('__')) {
             $DB->Rollback();
             throw new MigrationException('Ошибка при удалении типа инфоблока __');
         }
+
         $DB->Commit();
     }
 }
