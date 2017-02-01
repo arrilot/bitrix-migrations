@@ -101,6 +101,11 @@
     <td></td>
 </tr>
 <tr>
+    <td>`add_iblock_type`</td>
+    <td>Добавление типа инфоблока</td>
+    <td></td>
+</tr>
+<tr>
     <td>`add_iblock`</td>
     <td>Добавление инфоблока</td>
     <td></td>
