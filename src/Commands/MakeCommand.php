@@ -44,6 +44,12 @@ class MakeCommand extends AbstractCommand
                 't',
                 InputOption::VALUE_REQUIRED,
                 'Migration template'
+            )
+            ->addOption(
+                'directory',
+                'd',
+                InputOption::VALUE_REQUIRED,
+                'Migration directory'
             );
     }
 
@@ -54,7 +60,12 @@ class MakeCommand extends AbstractCommand
      */
     protected function fire()
     {
-        $migration = $this->migrator->createMigration($this->input->getArgument('name'), $this->input->getOption('template'));
+        $migration = $this->migrator->createMigration(
+            $this->input->getArgument('name'),
+            $this->input->getOption('template'),
+            [],
+            $this->input->getOption('directory')
+        );
 
         $this->message("<info>Migration created:</info> {$migration}.php");
     }

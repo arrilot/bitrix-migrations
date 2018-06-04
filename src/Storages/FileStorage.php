@@ -2,6 +2,7 @@
 
 namespace Arrilot\BitrixMigrations\Storages;
 
+use Arrilot\BitrixMigrations\Helpers;
 use Arrilot\BitrixMigrations\Interfaces\FileStorageInterface;
 use Exception;
 
@@ -16,7 +17,7 @@ class FileStorage implements FileStorageInterface
      */
     public function getMigrationFiles($path)
     {
-        $files = glob($path.'/*_*.php');
+        $files = Helpers::rGlob($path.'/*_*.php');
 
         if ($files === false) {
             return [];

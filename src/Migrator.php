@@ -72,12 +72,19 @@ class Migrator
      * @param string $name         - migration name
      * @param string $templateName
      * @param array  $replace      - array of placeholders that should be replaced with a given values.
+     * @param array  $subDir
      *
      * @return string
      */
-    public function createMigration($name, $templateName, array $replace = [])
+    public function createMigration($name, $templateName, array $replace = [], $subDir = '')
     {
-        $this->files->createDirIfItDoesNotExist($this->dir);
+        $targetDir = $this->dir;
+        $subDir = trim(str_replace('\\', '/', $subDir), '/');
+        if ($subDir) {
+            $targetDir .= '/' . $subDir;
+        }
+
+        $this->files->createDirIfItDoesNotExist($targetDir);
 
         $fileName = $this->constructFileName($name);
         $className = $this->getMigrationClassNameByFileName($fileName);
@@ -86,7 +93,7 @@ class Migrator
         $template = $this->files->getContent($this->templates->getTemplatePath($templateName));
         $template = $this->replacePlaceholdersInTemplate($template, array_merge($replace, ['className' => $className]));
 
-        $this->files->putContent($this->dir.'/'.$fileName.'.php', $template);
+        $this->files->putContent($targetDir.'/'.$fileName.'.php', $template);
 
         return $fileName;
     }
@@ -320,7 +327,12 @@ class Migrator
      */
     protected function getMigrationFilePath($migration)
     {
-        return $this->dir.'/'.$migration.'.php';
+        $files = Helpers::rGlob("$this->dir/$migration.php");
+        if (count($files) != 1) {
+            throw new \Exception("Not found migration file");
+        }
+
+        return $files[0];
     }
 
     /**
