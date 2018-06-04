@@ -72,7 +72,7 @@ class Migrator
      * @param string $name         - migration name
      * @param string $templateName
      * @param array  $replace      - array of placeholders that should be replaced with a given values.
-     * @param array  $subDir
+     * @param string  $subDir
      *
      * @return string
      */
