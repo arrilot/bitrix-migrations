@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+use Arrilot\BitrixMigrations\Commands\ArchiveCommand;
 use Arrilot\BitrixMigrations\Commands\MakeCommand;
 use Arrilot\BitrixMigrations\Commands\InstallCommand;
 use Arrilot\BitrixMigrations\Commands\MigrateCommand;
@@ -22,6 +23,7 @@ CModule::IncludeModule("iblock");
 $config = [
     'table' => 'migrations',
     'dir' => './migrations',
+    // 'dir_archive' => 'archive', // not required. default = "archive"
 ];
 
 $database = new BitrixDatabaseStorage($config['table']);
@@ -37,4 +39,5 @@ $app->add(new MigrateCommand($migrator));
 $app->add(new RollbackCommand($migrator));
 $app->add(new TemplatesCommand($templates));
 $app->add(new StatusCommand($migrator));
+$app->add(new ArchiveCommand($migrator));
 $app->run();

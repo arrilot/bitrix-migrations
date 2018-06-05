@@ -28,6 +28,13 @@ class Migrator
     protected $dir;
 
     /**
+     * Directory to store archive m.
+     *
+     * @var string
+     */
+    protected $dir_archive;
+
+    /**
      * Files interactions.
      *
      * @var FileStorageInterface
@@ -60,6 +67,7 @@ class Migrator
     {
         $this->config = $config;
         $this->dir = $config['dir'];
+        $this->dir_archive = $config['dir_archive'] ?: 'archive';
 
         $this->templates = $templates;
         $this->database = $database ?: new BitrixDatabaseStorage($config['table']);
@@ -163,6 +171,16 @@ class Migrator
     }
 
     /**
+     * Get all migrations.
+     *
+     * @return array
+     */
+    public function getAllMigrations()
+    {
+        return $this->files->getMigrationFiles($this->dir);
+    }
+
+    /**
      * Determine whether migration file for migration exists.
      *
      * @param string $migration
@@ -225,11 +243,44 @@ class Migrator
      */
     public function getMigrationsToRun()
     {
-        $allMigrations = $this->files->getMigrationFiles($this->dir);
+        $allMigrations = $this->getAllMigrations();
 
         $ranMigrations = $this->getRanMigrations();
 
         return array_diff($allMigrations, $ranMigrations);
+    }
+
+    /**
+     * Move migration files.
+     *
+     * @param array $files
+     * @param string $toDir
+     *
+     * @return int
+     */
+    public function moveMigrationFiles($files = [], $toDir = '')
+    {
+        $toDir = trim($toDir ?: $this->dir_archive, '/');
+        $files = $files ?: $this->getAllMigrations();
+        $this->files->createDirIfItDoesNotExist("$this->dir/$toDir");
+
+        $count = 0;
+        foreach ($files as $migration) {
+            $from = $this->getMigrationFilePath($migration);
+            $to = "$this->dir/$toDir/$migration.php";
+
+            if ($from == $to) {
+                continue;
+            }
+
+            $flag = $this->files->move($from, $to);
+
+            if ($flag) {
+                $count++;
+            }
+        }
+
+        return $count;
     }
 
     /**

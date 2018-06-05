@@ -114,4 +114,17 @@ class FileStorage implements FileStorageInterface
     {
         return $this->exists($path) ? unlink($path) : false;
     }
+
+    /**
+     * Move file.
+     *
+     * @param string $path_from
+     * @param string $path_to
+     *
+     * @return bool
+     */
+    public function move($path_from, $path_to)
+    {
+        return $this->exists($path_from) ? rename($path_from, $path_to) : false;
+    }
 }
