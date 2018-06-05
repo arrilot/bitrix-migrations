@@ -67,7 +67,7 @@ class Migrator
     {
         $this->config = $config;
         $this->dir = $config['dir'];
-        $this->dir_archive = $config['dir_archive'] ?: 'archive';
+        $this->dir_archive = isset($config['dir_archive']) ? $config['dir_archive'] : 'archive';
 
         $this->templates = $templates;
         $this->database = $database ?: new BitrixDatabaseStorage($config['table']);
