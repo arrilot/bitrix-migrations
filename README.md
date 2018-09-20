@@ -10,13 +10,15 @@
 
 ## Установка
 
-1) `composer require arrilot/bitrix-migrations`
+1) `composer require arrilot/bitrix-migrations` из папки bitrix проекта (1С-Битрикс начали поддержиивать сторонние пакеты через composer).
 
-2) `cp vendor/arrilot/bitrix-migrations/migrator migrator` - копируем исполняемый файл в удобное место.
+2) `cp vendor/arrilot/bitrix-migrations/migrator migrator` - копируем исполняемый файл в удобное место или читаем пункт 3.
 
-3) заходим внутрь и удостоверяемся что задается правильный $_SERVER['DOCUMENT_ROOT']. Меняем настройки если нужно
+3) с поставкой идет bash-скрипт `migrator.sh`. Для удобства работы можно, скопировать его в домашний каталог и сделать символическую ссылку в любой каталог с запускаемыми файлами. После этого можно вызывать мигратор командой `migrator` из любого подкаталога проекта.
 
-4) `php migrator install`
+4) заходим внутрь и удостоверяемся что задается правильный $_SERVER['DOCUMENT_ROOT']. Меняем настройки если нужно. Если используется bash-скрипт, настройки рекомендуется менять в нем.
+
+5) `php migrator install` или `migrator install` (здесь и далее, если используется bash-скрипт, вместо команды `php migrator` пишем `migrator`)
 
 Данная команда создаст в БД таблицу для хранения названий выполненных миграций.
 
@@ -157,9 +159,10 @@
 ### Автоматическое создание миграций
 
 Еще одна киллер-фича - режим автоматического создания миграций.
-Для его включения необходимо добавить примерно следующее в `init.php`
+Для его включения необходимо добавить примерно следующее в `init.php` (или в конец `/bitrix/php_interface/after_connect_d7.php`, что более предпочтительно, так как `init.php`, обычно перекрывается файлом `init.php` из папки `/local/php_interface`. А добавлять служебный код в папку `local` не комильфо по целому ряду причин).
 
 ```php
+require_once $_SERVER["DOCUMENT_ROOT"]."/bitrix/vendor/autoload.php";
 Arrilot\BitrixMigrations\Autocreate\Manager::init($_SERVER["DOCUMENT_ROOT"].'/migrations');
 ```
 

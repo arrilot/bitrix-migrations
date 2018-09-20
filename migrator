@@ -14,15 +14,17 @@ use Arrilot\BitrixMigrations\TemplatesCollection;
 use Symfony\Component\Console\Application;
 
 define("NOT_CHECK_PERMISSIONS", true);
-$_SERVER["DOCUMENT_ROOT"] = __DIR__;
+$_SERVER["DOCUMENT_ROOT"] = isset($_SERVER["CLI_DOCUMENT_ROOT"]) ? $_SERVER["CLI_DOCUMENT_ROOT"] : __DIR__;
 $DOCUMENT_ROOT = $_SERVER["DOCUMENT_ROOT"];
+$MIGRATIONS_DIR = isset($_SERVER["MIGRATIONS_DIR"]) ? $_SERVER["MIGRATIONS_DIR"] : $DOCUMENT_ROOT.'/local/migrations';
 require $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php";
+require_once $_SERVER["DOCUMENT_ROOT"]."/bitrix/vendor/autoload.php";
 
 CModule::IncludeModule("iblock");
     
 $config = [
     'table' => 'migrations',
-    'dir' => './migrations',
+    'dir' => $MIGRATIONS_DIR,
     // 'dir_archive' => 'archive', // not required. default = "archive"
 ];
 
