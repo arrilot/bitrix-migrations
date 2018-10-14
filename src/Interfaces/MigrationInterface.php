@@ -17,4 +17,11 @@ interface MigrationInterface
      * @return void
      */
     public function down();
+
+    /**
+     * use transaction
+     *
+     * @return bool
+     */
+    public function useTransaction($default = false);
 }

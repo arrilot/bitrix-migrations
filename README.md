@@ -258,3 +258,8 @@ Arrilot\BitrixMigrations\Autocreate\Manager::init($_SERVER["DOCUMENT_ROOT"].'/mi
 2) Реализовать свой аналог ` Arrilot\BitrixMigrations\Repositories\BitrixDatabaseRepository;` и использовать его.
 
 3) По желанию отключить существующие шаблоны миграций, сделав свои.
+
+## Конструкторы миграций
+
+- транзакции
+- значения по умолчанию

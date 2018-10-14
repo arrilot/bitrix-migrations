@@ -4,11 +4,13 @@ namespace Arrilot\BitrixMigrations;
 
 use Arrilot\BitrixIblockHelper\HLBlock;
 use Arrilot\BitrixIblockHelper\IblockId;
+use Arrilot\BitrixMigrations\Constructors\FieldConstructor;
 use Arrilot\BitrixMigrations\Interfaces\DatabaseStorageInterface;
 use Arrilot\BitrixMigrations\Interfaces\FileStorageInterface;
 use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
 use Arrilot\BitrixMigrations\Storages\BitrixDatabaseStorage;
 use Arrilot\BitrixMigrations\Storages\FileStorage;
+use Bitrix\Main\Application;
 use Exception;
 
 class Migrator
@@ -33,6 +35,13 @@ class Migrator
      * @var string
      */
     protected $dir_archive;
+
+    /**
+     * User transaction default.
+     *
+     * @var bool
+     */
+    protected $use_transaction;
 
     /**
      * Files interactions.
@@ -68,6 +77,13 @@ class Migrator
         $this->config = $config;
         $this->dir = $config['dir'];
         $this->dir_archive = isset($config['dir_archive']) ? $config['dir_archive'] : 'archive';
+        $this->use_transaction = isset($config['use_transaction']) ? $config['use_transaction'] : false;
+
+        if (is_array($config['default_fields'])) {
+            foreach ($config['default_fields'] as $class => $default_fields) {
+                FieldConstructor::$defaultFields[$class] = $default_fields;
+            }
+        }
 
         $this->templates = $templates;
         $this->database = $database ?: new BitrixDatabaseStorage($config['table']);
@@ -141,9 +157,11 @@ class Migrator
 
         $this->disableBitrixIblockHelperCache();
 
-        if ($migration->up() === false) {
-            throw new Exception("Migration up from {$file}.php returned false");
-        }
+        $this->checkTransactionAndRun($migration, function () use ($migration, $file) {
+            if ($migration->up() === false) {
+                throw new Exception("Migration up from {$file}.php returned false");
+            }
+        });
 
         $this->logSuccessfulMigration($file);
     }
@@ -205,9 +223,11 @@ class Migrator
     {
         $migration = $this->getMigrationObjectByFileName($file);
 
-        if ($migration->down() === false) {
-            throw new Exception("<error>Can't rollback migration:</error> {$file}.php");
-        }
+        $this->checkTransactionAndRun($migration, function () use ($migration, $file) {
+            if ($migration->down() === false) {
+                throw new Exception("<error>Can't rollback migration:</error> {$file}.php");
+            }
+        });
 
         $this->removeSuccessfulMigrationFromLog($file);
     }
@@ -403,6 +423,30 @@ class Migrator
             if (method_exists('\\Arrilot\\BitrixIblockHelper\\HLBlock', 'flushLocalCache')) {
                 HLBlock::flushLocalCache();
             }
+        }
+    }
+
+    /**
+     * @param MigrationInterface $migration
+     * @param callable $callback
+     * @throws Exception
+     */
+    protected function checkTransactionAndRun($migration, $callback)
+    {
+        if ($migration->useTransaction($this->use_transaction)) {
+            $this->database->startTransaction();
+            Logger::log("Начало транзакции", Logger::COLOR_LIGHT_BLUE);
+            try {
+                $callback();
+            } catch (\Exception $e) {
+                $this->database->rollbackTransaction();
+                Logger::log("Откат транзакции из-за ошибки '{$e->getMessage()}'", Logger::COLOR_LIGHT_RED);
+                throw $e;
+            }
+            $this->database->commitTransaction();
+            Logger::log("Конец транзакции", Logger::COLOR_LIGHT_BLUE);
+        } else {
+            $callback();
         }
     }
 }

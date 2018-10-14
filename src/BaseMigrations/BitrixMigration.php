@@ -20,6 +20,11 @@ class BitrixMigration implements MigrationInterface
     protected $db;
 
     /**
+     * @var bool
+     */
+    public $use_transaction = null;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -45,6 +50,20 @@ class BitrixMigration implements MigrationInterface
     public function down()
     {
         //
+    }
+
+    /**
+     * Does migration use transaction
+     * @param bool $default
+     * @return bool
+     */
+    public function useTransaction($default = false)
+    {
+        if (!is_null($this->use_transaction)) {
+            return $this->use_transaction;
+        }
+
+        return $default;
     }
 
     /**

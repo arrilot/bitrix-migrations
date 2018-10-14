@@ -8,6 +8,7 @@ use Arrilot\BitrixMigrations\Commands\MigrateCommand;
 use Arrilot\BitrixMigrations\Commands\RollbackCommand;
 use Arrilot\BitrixMigrations\Commands\TemplatesCommand;
 use Arrilot\BitrixMigrations\Commands\StatusCommand;
+use Arrilot\BitrixMigrations\Constructors\IBlockType;
 use Arrilot\BitrixMigrations\Migrator;
 use Arrilot\BitrixMigrations\Storages\BitrixDatabaseStorage;
 use Arrilot\BitrixMigrations\TemplatesCollection;
@@ -19,11 +20,17 @@ $DOCUMENT_ROOT = $_SERVER["DOCUMENT_ROOT"];
 require $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php";
 
 CModule::IncludeModule("iblock");
-    
+
 $config = [
     'table' => 'migrations',
     'dir' => './migrations',
     // 'dir_archive' => 'archive', // not required. default = "archive"
+    // 'use_transaction' => false, // not required. default = false
+    'default_fields' => [
+        IBlockType::class => [
+            'SORT' => 400
+        ]
+    ]
 ];
 
 $database = new BitrixDatabaseStorage($config['table']);

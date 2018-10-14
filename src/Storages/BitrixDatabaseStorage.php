@@ -3,6 +3,7 @@
 namespace Arrilot\BitrixMigrations\Storages;
 
 use Arrilot\BitrixMigrations\Interfaces\DatabaseStorageInterface;
+use Bitrix\Main\Application;
 use CDatabase;
 
 class BitrixDatabaseStorage implements DatabaseStorageInterface
@@ -96,5 +97,29 @@ class BitrixDatabaseStorage implements DatabaseStorageInterface
     public function removeSuccessfulMigrationFromLog($name)
     {
         $this->db->query("DELETE FROM {$this->table} WHERE MIGRATION = '".$this->db->forSql($name)."'");
+    }
+
+    /**
+     * Start transaction
+     */
+    public function startTransaction()
+    {
+        $this->db->StartTransaction();
+    }
+
+    /**
+     * Commit transaction
+     */
+    public function commitTransaction()
+    {
+        $this->db->Commit();
+    }
+
+    /**
+     * Rollback transaction
+     */
+    public function rollbackTransaction()
+    {
+        $this->db->Rollback();
     }
 }
