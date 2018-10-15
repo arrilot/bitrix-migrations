@@ -18,11 +18,15 @@ class IBlock
     public function add()
     {
         $obj = new \CIBlock();
-        if (!$obj->Add($this->getFieldsWithDefault())) {
+
+        $iblockId = $obj->Add($this->getFieldsWithDefault());
+        if (!$iblockId) {
             throw new \Exception($obj->LAST_ERROR);
         }
 
-        Logger::log("Добавлен инфоблок {$this->fields['ID']}", Logger::COLOR_GREEN);
+        Logger::log("Добавлен инфоблок {$this->fields['CODE']}", Logger::COLOR_GREEN);
+
+        return $iblockId;
     }
 
     /**
@@ -59,15 +63,15 @@ class IBlock
     }
 
     /**
-     * ID информационного блока.
-     * @param string $id
+     * Установить настройки для добавления инфоблока по умолчанию
+     * @param $name
+     * @param $code
+     * @param $iblock_type_id
      * @return $this
      */
-    public function setId($id)
+    public function constructDefault($name, $code, $iblock_type_id)
     {
-        $this->fields['ID'] = $id;
-
-        return $this;
+        return $this->setName($name)->setCode($code)->setIblockTypeId($iblock_type_id);
     }
 
     /**

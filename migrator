@@ -8,7 +8,7 @@ use Arrilot\BitrixMigrations\Commands\MigrateCommand;
 use Arrilot\BitrixMigrations\Commands\RollbackCommand;
 use Arrilot\BitrixMigrations\Commands\TemplatesCommand;
 use Arrilot\BitrixMigrations\Commands\StatusCommand;
-use Arrilot\BitrixMigrations\Constructors\IBlockType;
+use Arrilot\BitrixMigrations\Constructors\IBlock;
 use Arrilot\BitrixMigrations\Migrator;
 use Arrilot\BitrixMigrations\Storages\BitrixDatabaseStorage;
 use Arrilot\BitrixMigrations\TemplatesCollection;
@@ -27,8 +27,11 @@ $config = [
     // 'dir_archive' => 'archive', // not required. default = "archive"
     // 'use_transaction' => false, // not required. default = false
     'default_fields' => [
-        IBlockType::class => [
-            'SORT' => 400
+        IBlock::class => [
+            'INDEX_ELEMENT' => 'N',
+            'INDEX_SECTION' => 'N',
+            'VERSION' => 2,
+            'SITE_ID' => 's1',
         ]
     ]
 ];
