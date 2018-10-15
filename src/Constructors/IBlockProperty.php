@@ -173,13 +173,15 @@ class IBlockProperty
 
     /**
      * Установить тип свойства "Список"
+     * @param array $values массив доступных значений (можно собрать с помощью класса IBlockPropertyEnum)
      * @param string $listType Тип, может быть "L" - выпадающий список или "C" - флажки.
      * @param int $multipleCnt Количество строк в выпадающем списке
      * @return $this
      */
-    public function setPropertyTypeList($listType = null, $multipleCnt = null)
+    public function setPropertyTypeList($values, $listType = null, $multipleCnt = null)
     {
         $this->setPropertyType('L');
+        $this->fields['VALUES'] = $values;
 
         if (!is_null($listType)) {
             $this->setListType($listType);
