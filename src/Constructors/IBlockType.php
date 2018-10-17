@@ -47,13 +47,9 @@ class IBlockType
      */
     public static function delete($id)
     {
-        Application::getConnection()->startTransaction();
         if (!\CIBlockType::Delete($id)) {
-            Application::getConnection()->rollbackTransaction();
             throw new \Exception('Ошибка при удалении типа инфоблока');
         }
-
-        Application::getConnection()->commitTransaction();
 
         Logger::log("Удален тип инфоблока {$id}", Logger::COLOR_GREEN);
     }

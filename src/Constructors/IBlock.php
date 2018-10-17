@@ -51,13 +51,9 @@ class IBlock
      */
     public static function delete($id)
     {
-        Application::getConnection()->startTransaction();
         if (!\CIBlock::Delete($id)) {
-            Application::getConnection()->rollbackTransaction();
             throw new \Exception('Ошибка при удалении инфоблока');
         }
-
-        Application::getConnection()->commitTransaction();
 
         Logger::log("Удален инфоблок {$id}", Logger::COLOR_GREEN);
     }

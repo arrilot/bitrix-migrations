@@ -52,13 +52,9 @@ class IBlockProperty
      */
     public static function delete($id)
     {
-        Application::getConnection()->startTransaction();
         if (!\CIBlockProperty::Delete($id)) {
-            Application::getConnection()->rollbackTransaction();
             throw new \Exception('Ошибка при удалении свойства инфоблока');
         }
-
-        Application::getConnection()->commitTransaction();
 
         Logger::log("Удалено свойство инфоблока {$id}", Logger::COLOR_GREEN);
     }

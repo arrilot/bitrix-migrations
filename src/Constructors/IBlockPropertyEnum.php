@@ -19,15 +19,15 @@ class IBlockPropertyEnum
     {
         $obj = new \CIBlockPropertyEnum();
 
-        $property_id = $obj->Add($this->getFieldsWithDefault());
+        $property_enum_id = $obj->Add($this->getFieldsWithDefault());
 
-        if (!$property_id) {
+        if (!$property_enum_id) {
             throw new \Exception("Ошибка добавления значения enum");
         }
 
         Logger::log("Добавлено значение списка enum {$this->fields['VALUE']}", Logger::COLOR_GREEN);
 
-        return $property_id;
+        return $property_enum_id;
     }
 
     /**
@@ -60,7 +60,7 @@ class IBlockPropertyEnum
     }
 
     /**
-     * Установить настройки для добавления свойства инфоблока по умолчанию
+     * Установить настройки для добавления значения enum инфоблока по умолчанию
      * @param string $xml_id
      * @param string $value
      * @param int $propertyId
