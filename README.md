@@ -259,7 +259,3 @@ Arrilot\BitrixMigrations\Autocreate\Manager::init($_SERVER["DOCUMENT_ROOT"].'/mi
 
 3) По желанию отключить существующие шаблоны миграций, сделав свои.
 
-## Конструкторы миграций
-
-- транзакции
-- значения по умолчанию
