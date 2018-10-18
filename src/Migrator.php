@@ -79,7 +79,7 @@ class Migrator
         $this->dir_archive = isset($config['dir_archive']) ? $config['dir_archive'] : 'archive';
         $this->use_transaction = isset($config['use_transaction']) ? $config['use_transaction'] : false;
 
-        if (is_array($config['default_fields'])) {
+        if (isset($config['default_fields']) && is_array($config['default_fields'])) {
             foreach ($config['default_fields'] as $class => $default_fields) {
                 FieldConstructor::$defaultFields[$class] = $default_fields;
             }
