@@ -25,7 +25,7 @@ $config = [
     'table' => 'migrations',
     'dir' => './migrations',
     // 'dir_archive' => 'archive', // not required. default = "archive"
-    // 'use_transaction' => false, // not required. default = false
+    'use_transaction' => true, // not required. default = false
     'default_fields' => [
         IBlock::class => [
             'INDEX_ELEMENT' => 'N',
