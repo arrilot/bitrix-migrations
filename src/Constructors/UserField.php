@@ -57,7 +57,7 @@ class UserField
      */
     public static function delete($id)
     {
-        $result = \CUserTypeEntity::Delete($id);
+        $result = (new \CUserTypeEntity())->Delete($id);
 
         if (!$result) {
             global $APPLICATION;
