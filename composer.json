@@ -31,5 +31,6 @@
     "psr-4": {
       "Arrilot\\Tests\\BitrixMigrations\\": "tests/"
     }
-  }
+  },
+  "bin": ["migrator"]
 }
