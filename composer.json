@@ -16,7 +16,8 @@
   "require": {
     "php": ">=5.5.0",
     "symfony/console": "~2|~3|~4",
-    "tightenco/collect": "5.*"
+    "tightenco/collect": "5.*",
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.0",
@@ -31,5 +32,6 @@
     "psr-4": {
       "Arrilot\\Tests\\BitrixMigrations\\": "tests/"
     }
-  }
+  },
+  "bin": ["migrator"]
 }

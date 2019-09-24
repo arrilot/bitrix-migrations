@@ -13,9 +13,48 @@ use Arrilot\BitrixMigrations\Migrator;
 use Arrilot\BitrixMigrations\Storages\BitrixDatabaseStorage;
 use Arrilot\BitrixMigrations\TemplatesCollection;
 use Symfony\Component\Console\Application;
+use Arrilot\BitrixMigrations\ComposerConfigFileFinder;
+use Arrilot\BitrixMigrations\ComposerConfig;
 
 define("NOT_CHECK_PERMISSIONS", true);
-$_SERVER["DOCUMENT_ROOT"] = __DIR__;
+
+$autoloadFiles = [
+    __DIR__ . '/../autoload.php',
+    __DIR__ . '/../../autoload.php',
+];
+$autoloaderFound = false;
+
+foreach ($autoloadFiles as $autoloadFile) {
+    if (!file_exists($autoloadFile)) {
+        continue;
+    }
+
+    require_once $autoloadFile;
+    $autoloaderFound = true;
+}
+
+if (!$autoloaderFound) {
+    echo 'vendor/autoload.php could not be found. Did you run `composer install`?', PHP_EOL;
+    exit();
+}
+
+$composerConfigFinder = new ComposerConfigFileFinder();
+$sourceDir = getcwd();
+
+if ($sourceDir === false) {
+    throw new RuntimeException('Произошла ошибка при получении рабочего каталога, возможно запрещен доступ к родительским каталогам');
+}
+
+$composerConfigFile = $composerConfigFinder->find($sourceDir);
+
+if (is_null($composerConfigFile) || !$composerConfigFile->isFile()) {
+    throw new RuntimeException('Файл не найден');
+}
+
+$composerConfig = ComposerConfig::createFromFile($composerConfigFile->getPathname());
+$extra = $composerConfig->getExtra();
+
+$_SERVER["DOCUMENT_ROOT"] = isset($extra['public-dir']) ? $composerConfigFile->getPath() . "/" . ltrim($extra['public-dir'], '/') : __DIR__;
 $DOCUMENT_ROOT = $_SERVER["DOCUMENT_ROOT"];
 require $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php";
 
@@ -35,6 +74,10 @@ $config = [
         ]
     ]
 ];
+
+if (!empty($extra['arrilot-bitrix-migrations'])) {
+    $config = array_merge($config, $extra['arrilot-bitrix-migrations']);
+}
 
 $database = new BitrixDatabaseStorage($config['table']);
 $templates = new TemplatesCollection();
