@@ -383,6 +383,18 @@ class IBlock
     }
 
     /**
+     * Служебное поле для установки прав для разных групп на доступ к информационному блоку.
+     * @param array $groupId Массив соответствий кодов групп правам доступа
+     * @return $this
+     */
+    public function setGroupId($groupId)
+    {
+        $this->fields['GROUP_ID'] = $groupId;
+
+        return $this;
+    }
+
+    /**
      * Служебное поле для привязки к группе социальной сети.
      * @param int $socnetGroupId
      * @return $this
