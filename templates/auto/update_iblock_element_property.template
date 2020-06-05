@@ -15,7 +15,7 @@ class __className__ extends BitrixMigration
     {
         $fields = __fields__;
 
-        $id = $this->getIblockPropIdByCode(__code__, __iblockId__);
+        $id = $this->getIblockPropIdByCode(__oldCode__, __iblockId__);
         $fields['ID'] = $id;
 
         $ibp = new CIBlockProperty();
