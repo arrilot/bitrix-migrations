@@ -64,6 +64,7 @@ class OnBeforeIBlockPropertyUpdate extends BaseHandler implements HandlerInterfa
             'fields'   => var_export($this->fields, true),
             'iblockId' => $this->fields['IBLOCK_ID'],
             'code'     => "'".$this->fields['CODE']."'",
+            'oldCode'     => "'".$this->dbFields['CODE']."'",
         ];
     }
 
